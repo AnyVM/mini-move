@@ -6,8 +6,16 @@ use crate::{
     config::VMConfig,
     logging::expect_no_verification_errors,
     native_functions::{NativeFunction, NativeFunctions, UnboxedNativeFunction},
+    no_std::*,
     session::LoadedFunctionInstantiation,
 };
+use alloc::{
+    collections::{BTreeMap, BTreeSet},
+    fmt::Debug,
+    sync::Arc,
+};
+use core::hash::Hash;
+use hashbrown::HashMap;
 use move_binary_format::{
     access::{ModuleAccess, ScriptAccess},
     binary_views::BinaryIndexedView,
@@ -33,14 +41,8 @@ use move_vm_types::{
     data_store::DataStore,
     loaded_data::runtime_types::{CachedStructIndex, StructType, Type},
 };
-use parking_lot::RwLock;
 use sha3::{Digest, Sha3_256};
-use std::{
-    collections::{BTreeMap, BTreeSet, HashMap},
-    fmt::Debug,
-    hash::Hash,
-    sync::Arc,
-};
+use spin::RwLock;
 use tracing::error;
 
 type ScriptHash = [u8; 32];
@@ -532,7 +534,7 @@ impl Loader {
     /// indirect ones, that is all dependencies.
     pub(crate) fn get_and_clear_module_cache_hits(&self) -> BTreeSet<ModuleId> {
         let mut result = BTreeSet::new();
-        let hits: BTreeSet<ModuleId> = std::mem::take(&mut self.module_cache_hits.write());
+        let hits: BTreeSet<ModuleId> = core::mem::take(&mut self.module_cache_hits.write());
         for id in hits {
             self.transitive_dep_closure(&id, &mut result)
         }

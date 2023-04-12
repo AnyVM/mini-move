@@ -21,7 +21,7 @@ use move_binary_format::{
     IndexKind,
 };
 use move_core_types::vm_status::StatusCode;
-use std::collections::HashMap;
+use hashbrown::HashMap;
 
 pub struct CodeUnitVerifier<'a> {
     resolver: BinaryIndexedView<'a>,

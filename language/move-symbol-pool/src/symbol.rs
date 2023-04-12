@@ -2,9 +2,10 @@
 // Copyright (c) The Move Contributors
 // SPDX-License-Identifier: Apache-2.0
 
-use crate::{pool::Entry, SYMBOL_POOL};
+use crate::{no_std::*, pool::Entry, SYMBOL_POOL};
+use alloc::borrow::Cow;
+use core::{cmp::Ordering, fmt, num::NonZeroU64, ops::Deref};
 use serde::{de::Deserialize, ser::Serialize};
-use std::{borrow::Cow, cmp::Ordering, fmt, num::NonZeroU64, ops::Deref};
 
 /// Represents a string that has been cached.
 ///
@@ -49,7 +50,7 @@ impl Symbol {
 
 impl<'a> From<Cow<'a, str>> for Symbol {
     fn from(s: Cow<'a, str>) -> Self {
-        let mut pool = SYMBOL_POOL.lock().expect("could not acquire lock on pool");
+        let mut pool = SYMBOL_POOL.lock();
         let address = pool.insert(s).as_ptr() as u64;
         Symbol(NonZeroU64::new(address).expect("address of symbol cannot be null"))
     }

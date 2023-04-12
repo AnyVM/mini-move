@@ -322,7 +322,7 @@ pub mod known_locations {
         language_storage::{ModuleId, CORE_CODE_ADDRESS},
         vm_status::AbortLocation,
     };
-    use once_cell::sync::Lazy;
+    use spin::Lazy;
 
     /// The Identifier for the Account module.
     pub const CORE_ACCOUNT_MODULE_IDENTIFIER: &IdentStr = ident_str!("Account");

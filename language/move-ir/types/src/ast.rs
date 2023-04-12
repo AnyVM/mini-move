@@ -4,19 +4,21 @@
 
 use crate::{
     location::*,
+    no_std::*,
     spec_language_ast::{Condition, Invariant, SyntheticDefinition},
 };
+use alloc::{
+    collections::{BTreeSet, VecDeque},
+    fmt,
+};
+use hashbrown::HashSet;
 use move_core_types::{
     account_address::AccountAddress, identifier::Identifier, language_storage::ModuleId,
     value::MoveValue,
 };
 use move_symbol_pool::Symbol;
-use once_cell::sync::Lazy;
 use serde::{Deserialize, Serialize};
-use std::{
-    collections::{BTreeSet, HashSet, VecDeque},
-    fmt,
-};
+use spin::Lazy;
 
 //**************************************************************************************************
 // Program

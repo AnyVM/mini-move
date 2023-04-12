@@ -10,6 +10,7 @@ use move_core_types::{
     gas_algebra::AbstractMemorySize, identifier::Identifier, language_storage::ModuleId,
     vm_status::StatusCode,
 };
+use crate::	no_std::*;
 
 pub const TYPE_DEPTH_MAX: usize = 256;
 

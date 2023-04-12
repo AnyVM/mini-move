@@ -9,8 +9,11 @@ use crate::{
     loader::{Function, Loader},
     native_extensions::NativeContextExtensions,
     native_functions::{NativeFunction, NativeFunctions},
+    no_std::*,
     session::{LoadedFunctionInstantiation, SerializedReturnValues, Session},
 };
+use alloc::{collections::BTreeSet, sync::Arc};
+use core::borrow::Borrow;
 use move_binary_format::{
     access::ModuleAccess,
     compatibility::Compatibility,
@@ -33,7 +36,6 @@ use move_vm_types::{
     loaded_data::runtime_types::Type,
     values::{Locals, Reference, VMValueCast, Value},
 };
-use std::{borrow::Borrow, collections::BTreeSet, sync::Arc};
 use tracing::warn;
 
 /// An instantiation of the MoveVM.
@@ -374,7 +376,7 @@ impl VMRuntime {
             .map_err(|e| e.finish(Location::Undefined))?;
 
         // locals should not be dropped until all return values are serialized
-        std::mem::drop(dummy_locals);
+        core::mem::drop(dummy_locals);
 
         Ok(SerializedReturnValues {
             mutable_reference_outputs: serialized_mut_ref_outputs,

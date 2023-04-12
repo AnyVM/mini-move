@@ -4,7 +4,7 @@
 
 use crate::identifier::{IdentStr, Identifier, ALLOWED_IDENTIFIERS, ALLOWED_NO_SELF_IDENTIFIERS};
 use bcs::test_helpers::assert_canonical_encode_decode;
-use once_cell::sync::Lazy;
+use spin::Lazy;
 use proptest::prelude::*;
 use regex::Regex;
 use std::borrow::Borrow;

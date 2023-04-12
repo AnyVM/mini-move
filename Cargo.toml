@@ -100,6 +100,53 @@ default-members = [
 # Dependencies that should be kept in sync through the whole workspace
 [workspace.dependencies]
 bcs = "0.1.4"
+sha3 = "0.9.1"
+tracing = "0.1.26"
+
+petgraph = "0.5.1"
+
+ref-cast = "1.0.6"
+variant_count = "1.1.0"
+
+serde = { version = "1.0.124", default-features = false, features = ["alloc"]}
+serde_bytes = "0.11.5"
+hex = "0.4.3"
+primitive-types = {version = "0.10.1", features = ["impl-serde"]}
+uint = "0.9.4"
+num = "0.4.0"
+ethnum = "1.0.4"
+smallvec = "1.6.1"
+hashbrown = "0.13.2"
+spin = "0.9.5"
+
+thiserror = "1.0.24"
+
+serde_json = "1.0.64"
+
+#regex = "1.5.5"
+num-bigint = "0.4.0"
+
+sha2 = "0.9.3"
+
+acid_io = { version = "0.1.0", features = ["alloc"] }
+
+# std::error::Error
+anyhow =  "1.0.52"
+
+better_any = "0.1.1" # impl Traits for Mutex/RwLock, may not be a problem if not used;
+fail = "0.4.0"
+
+# members 
+
+move-vm-runtime = { path = "language/move-vm/runtime"}
+move-vm-types = { path = "language/move-vm/types"}
+move-binary-format = { path = "language/move-binary-format"}
+move-symbol-pool = { path = "language/move-symbol-pool"}
+move-ir-types = { path = "language/move-ir/types"}
+move-stdlib = { path = "language/move-stdlib/"}
+move-core-types = { path = "language/move-core/types"}
+move-bytecode-verifier = { path = "language/move-bytecode-verifier"}
+move-borrow-graph = { path = "language/move-borrow-graph"}
 
 [profile.bench]
 debug = true

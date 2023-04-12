@@ -10,8 +10,10 @@ publish = false
 edition = "2021"
 
 [dependencies]
-once_cell = "1.7.2"
-serde = { version = "1.0.124", features = ["derive"] }
+spin.workspace = true
+hashbrown.workspace = true
+
+serde = { workspace = true, features = ["derive"] }
 
 
 [dev-dependencies]

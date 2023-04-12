@@ -4,6 +4,7 @@
 
 use crate::{
     loaded_data::runtime_types::Type,
+    no_std::*,
     values::{GlobalValue, Value},
 };
 use move_binary_format::errors::{PartialVMResult, VMResult};

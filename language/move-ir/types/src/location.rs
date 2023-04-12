@@ -2,14 +2,14 @@
 // Copyright (c) The Move Contributors
 // SPDX-License-Identifier: Apache-2.0
 
-use move_command_line_common::files::FileHash;
-use serde::{Deserialize, Serialize};
-use std::{
+use alloc::fmt;
+use core::{
     cmp::Ordering,
-    fmt,
     hash::{Hash, Hasher},
     ops::Range,
 };
+use move_command_line_common::files::FileHash;
+use serde::{Deserialize, Serialize};
 
 //**************************************************************************************************
 // Loc
@@ -135,7 +135,7 @@ impl<T: Ord> Ord for Spanned<T> {
 }
 
 impl<T: fmt::Display> fmt::Display for Spanned<T> {
-    fn fmt(&self, f: &mut fmt::Formatter) -> std::fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", &self.value)
     }
 }

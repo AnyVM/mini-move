@@ -33,10 +33,10 @@
 //! [`HashSet`]: std::collections::HashSet
 //! [`LinkedList`]: std::collections::LinkedList
 
-use std::{
-    borrow::Cow,
-    collections::hash_map::DefaultHasher,
-    hash::{Hash, Hasher},
+use crate::no_std::*;
+use alloc::borrow::Cow;
+use core::{
+    hash::{BuildHasher, Hash, Hasher},
     ptr::NonNull,
 };
 
@@ -62,7 +62,7 @@ impl Pool {
     /// Allocates a contiguous array of buckets on the heap. As strings are
     /// inserted into the pool, buckets in this array are filled with an entry.
     pub(crate) fn new() -> Self {
-        let vec = std::mem::ManuallyDrop::new(vec![0_usize; NB_BUCKETS]);
+        let vec = core::mem::ManuallyDrop::new(vec![0_usize; NB_BUCKETS]);
         Self(unsafe { Box::from_raw(vec.as_ptr() as *mut [Bucket; NB_BUCKETS]) })
     }
 
@@ -71,7 +71,8 @@ impl Pool {
     /// as well as a scalar value that can be used to quickly check whether
     /// two strings are not equal.
     fn hash(string: &str) -> u64 {
-        let mut hasher = DefaultHasher::new();
+        use hashbrown::hash_map::DefaultHashBuilder;
+        let mut hasher = DefaultHashBuilder::default().build_hasher();
         string.hash(&mut hasher);
         hasher.finish()
     }
@@ -117,8 +118,9 @@ impl Pool {
 
 #[cfg(test)]
 mod tests {
-    use std::borrow::Cow;
+    use alloc::borrow::Cow;
 
+    use crate::no_std::*;
     use crate::Pool;
 
     #[test]

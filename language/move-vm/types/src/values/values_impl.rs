@@ -4,8 +4,14 @@
 
 use crate::{
     loaded_data::runtime_types::Type,
+    no_std::*,
     views::{ValueView, ValueVisitor},
 };
+use alloc::{
+    fmt::{self, Debug, Display},
+    rc::Rc,
+};
+use core::{cell::RefCell, iter};
 use move_binary_format::{
     errors::*,
     file_format::{Constant, SignatureToken},
@@ -17,12 +23,6 @@ use move_core_types::{
     u256,
     value::{MoveStructLayout, MoveTypeLayout},
     vm_status::{sub_status::NFE_VECTOR_ERROR_BASE, StatusCode},
-};
-use std::{
-    cell::RefCell,
-    fmt::{self, Debug, Display},
-    iter,
-    rc::Rc,
 };
 
 /***************************************************************************************
@@ -1007,7 +1007,7 @@ impl Locals {
                         .with_message("moving container with dangling references".to_string()));
                     }
                 }
-                Ok(Value(std::mem::replace(v, x.0)))
+                Ok(Value(core::mem::replace(v, x.0)))
             }
             None => Err(
                 PartialVMError::new(StatusCode::VERIFIER_INVARIANT_VIOLATION).with_message(
@@ -1046,7 +1046,7 @@ impl Locals {
                 }
                 _ => res.push((
                     idx,
-                    Value(std::mem::replace(&mut locals[idx], ValueImpl::Invalid)),
+                    Value(core::mem::replace(&mut locals[idx], ValueImpl::Invalid)),
                 )),
             }
         }
@@ -1742,7 +1742,7 @@ impl IntegerValue {
         match self {
             U8(x) => Ok(x),
             U16(x) => {
-                if x > (std::u8::MAX as u16) {
+                if x > (core::u8::MAX as u16) {
                     Err(PartialVMError::new(StatusCode::ARITHMETIC_ERROR)
                         .with_message(format!("Cannot cast u16({}) to u8", x)))
                 } else {
@@ -1750,7 +1750,7 @@ impl IntegerValue {
                 }
             }
             U32(x) => {
-                if x > (std::u8::MAX as u32) {
+                if x > (core::u8::MAX as u32) {
                     Err(PartialVMError::new(StatusCode::ARITHMETIC_ERROR)
                         .with_message(format!("Cannot cast u32({}) to u8", x)))
                 } else {
@@ -1758,7 +1758,7 @@ impl IntegerValue {
                 }
             }
             U64(x) => {
-                if x > (std::u8::MAX as u64) {
+                if x > (core::u8::MAX as u64) {
                     Err(PartialVMError::new(StatusCode::ARITHMETIC_ERROR)
                         .with_message(format!("Cannot cast u64({}) to u8", x)))
                 } else {
@@ -1766,7 +1766,7 @@ impl IntegerValue {
                 }
             }
             U128(x) => {
-                if x > (std::u8::MAX as u128) {
+                if x > (core::u8::MAX as u128) {
                     Err(PartialVMError::new(StatusCode::ARITHMETIC_ERROR)
                         .with_message(format!("Cannot cast u128({}) to u8", x)))
                 } else {
@@ -1774,7 +1774,7 @@ impl IntegerValue {
                 }
             }
             U256(x) => {
-                if x > (u256::U256::from(std::u8::MAX)) {
+                if x > (u256::U256::from(core::u8::MAX)) {
                     Err(PartialVMError::new(StatusCode::ARITHMETIC_ERROR)
                         .with_message(format!("Cannot cast u256({}) to u8", x)))
                 } else {
@@ -1791,7 +1791,7 @@ impl IntegerValue {
             U8(x) => Ok(x as u16),
             U16(x) => Ok(x),
             U32(x) => {
-                if x > (std::u16::MAX as u32) {
+                if x > (core::u16::MAX as u32) {
                     Err(PartialVMError::new(StatusCode::ARITHMETIC_ERROR)
                         .with_message(format!("Cannot cast u32({}) to u16", x)))
                 } else {
@@ -1799,7 +1799,7 @@ impl IntegerValue {
                 }
             }
             U64(x) => {
-                if x > (std::u16::MAX as u64) {
+                if x > (core::u16::MAX as u64) {
                     Err(PartialVMError::new(StatusCode::ARITHMETIC_ERROR)
                         .with_message(format!("Cannot cast u64({}) to u16", x)))
                 } else {
@@ -1807,7 +1807,7 @@ impl IntegerValue {
                 }
             }
             U128(x) => {
-                if x > (std::u16::MAX as u128) {
+                if x > (core::u16::MAX as u128) {
                     Err(PartialVMError::new(StatusCode::ARITHMETIC_ERROR)
                         .with_message(format!("Cannot cast u128({}) to u16", x)))
                 } else {
@@ -1815,7 +1815,7 @@ impl IntegerValue {
                 }
             }
             U256(x) => {
-                if x > (u256::U256::from(std::u16::MAX)) {
+                if x > (u256::U256::from(core::u16::MAX)) {
                     Err(PartialVMError::new(StatusCode::ARITHMETIC_ERROR)
                         .with_message(format!("Cannot cast u256({}) to u16", x)))
                 } else {
@@ -1833,7 +1833,7 @@ impl IntegerValue {
             U16(x) => Ok(x as u32),
             U32(x) => Ok(x),
             U64(x) => {
-                if x > (std::u32::MAX as u64) {
+                if x > (core::u32::MAX as u64) {
                     Err(PartialVMError::new(StatusCode::ARITHMETIC_ERROR)
                         .with_message(format!("Cannot cast u64({}) to u32", x)))
                 } else {
@@ -1841,7 +1841,7 @@ impl IntegerValue {
                 }
             }
             U128(x) => {
-                if x > (std::u32::MAX as u128) {
+                if x > (core::u32::MAX as u128) {
                     Err(PartialVMError::new(StatusCode::ARITHMETIC_ERROR)
                         .with_message(format!("Cannot cast u128({}) to u32", x)))
                 } else {
@@ -1849,7 +1849,7 @@ impl IntegerValue {
                 }
             }
             U256(x) => {
-                if x > (u256::U256::from(std::u32::MAX)) {
+                if x > (u256::U256::from(core::u32::MAX)) {
                     Err(PartialVMError::new(StatusCode::ARITHMETIC_ERROR)
                         .with_message(format!("Cannot cast u128({}) to u32", x)))
                 } else {
@@ -1868,7 +1868,7 @@ impl IntegerValue {
             U32(x) => Ok(x as u64),
             U64(x) => Ok(x),
             U128(x) => {
-                if x > (std::u64::MAX as u128) {
+                if x > (core::u64::MAX as u128) {
                     Err(PartialVMError::new(StatusCode::ARITHMETIC_ERROR)
                         .with_message(format!("Cannot cast u128({}) to u64", x)))
                 } else {
@@ -1876,7 +1876,7 @@ impl IntegerValue {
                 }
             }
             U256(x) => {
-                if x > (u256::U256::from(std::u64::MAX)) {
+                if x > (u256::U256::from(core::u64::MAX)) {
                     Err(PartialVMError::new(StatusCode::ARITHMETIC_ERROR)
                         .with_message(format!("Cannot cast u256({}) to u64", x)))
                 } else {
@@ -1896,7 +1896,7 @@ impl IntegerValue {
             U64(x) => Ok(x as u128),
             U128(x) => Ok(x),
             U256(x) => {
-                if x > (u256::U256::from(std::u128::MAX)) {
+                if x > (u256::U256::from(core::u128::MAX)) {
                     Err(PartialVMError::new(StatusCode::ARITHMETIC_ERROR)
                         .with_message(format!("Cannot cast u256({}) to u128", x)))
                 } else {
@@ -2028,7 +2028,7 @@ impl VectorRef {
     }
 
     /// Returns a RefCell reference to the underlying vector of a `&vector<u8>` value.
-    pub fn as_bytes_ref(&self) -> std::cell::Ref<'_, Vec<u8>> {
+    pub fn as_bytes_ref(&self) -> core::cell::Ref<'_, Vec<u8>> {
         let c = self.0.container();
         match c {
             Container::VecU8(r) => r.borrow(),
@@ -2290,28 +2290,28 @@ impl Container {
                 Struct::legacy_size_impl(&r.borrow())
             }
             Self::VecU8(r) => {
-                AbstractMemorySize::new((r.borrow().len() * std::mem::size_of::<u8>()) as u64)
+                AbstractMemorySize::new((r.borrow().len() * core::mem::size_of::<u8>()) as u64)
             }
             Self::VecU16(r) => {
-                AbstractMemorySize::new((r.borrow().len() * std::mem::size_of::<u16>()) as u64)
+                AbstractMemorySize::new((r.borrow().len() * core::mem::size_of::<u16>()) as u64)
             }
             Self::VecU32(r) => {
-                AbstractMemorySize::new((r.borrow().len() * std::mem::size_of::<u32>()) as u64)
+                AbstractMemorySize::new((r.borrow().len() * core::mem::size_of::<u32>()) as u64)
             }
             Self::VecU64(r) => {
-                AbstractMemorySize::new((r.borrow().len() * std::mem::size_of::<u64>()) as u64)
+                AbstractMemorySize::new((r.borrow().len() * core::mem::size_of::<u64>()) as u64)
             }
             Self::VecU128(r) => {
-                AbstractMemorySize::new((r.borrow().len() * std::mem::size_of::<u128>()) as u64)
+                AbstractMemorySize::new((r.borrow().len() * core::mem::size_of::<u128>()) as u64)
             }
             Self::VecU256(r) => AbstractMemorySize::new(
-                (r.borrow().len() * std::mem::size_of::<u256::U256>()) as u64,
+                (r.borrow().len() * core::mem::size_of::<u256::U256>()) as u64,
             ),
             Self::VecBool(r) => {
-                AbstractMemorySize::new((r.borrow().len() * std::mem::size_of::<bool>()) as u64)
+                AbstractMemorySize::new((r.borrow().len() * core::mem::size_of::<bool>()) as u64)
             }
             Self::VecAddress(r) => AbstractMemorySize::new(
-                (r.borrow().len() * std::mem::size_of::<AccountAddress>()) as u64,
+                (r.borrow().len() * core::mem::size_of::<AccountAddress>()) as u64,
             ),
         }
     }
@@ -2450,11 +2450,11 @@ impl GlobalValueImpl {
             Self::None | Self::Deleted => {
                 return Err(PartialVMError::new(StatusCode::MISSING_DATA))
             }
-            Self::Fresh { .. } => match std::mem::replace(self, Self::None) {
+            Self::Fresh { .. } => match core::mem::replace(self, Self::None) {
                 Self::Fresh { fields } => fields,
                 _ => unreachable!(),
             },
-            Self::Cached { .. } => match std::mem::replace(self, Self::Deleted) {
+            Self::Cached { .. } => match core::mem::replace(self, Self::Deleted) {
                 Self::Cached { fields, .. } => fields,
                 _ => unreachable!(),
             },
@@ -2680,7 +2680,7 @@ impl Display for Locals {
 #[allow(dead_code)]
 pub mod debug {
     use super::*;
-    use std::fmt::Write;
+    use alloc::fmt::Write;
 
     fn print_invalid<B: Write>(buf: &mut B) -> PartialVMResult<()> {
         debug_write!(buf, "-")

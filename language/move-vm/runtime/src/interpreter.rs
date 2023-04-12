@@ -2,10 +2,12 @@
 // Copyright (c) The Move Contributors
 // SPDX-License-Identifier: Apache-2.0
 
+#[cfg(test)]
+use crate::trace;
 use crate::{
     loader::{Function, Loader, Resolver},
     native_functions::NativeContext,
-    trace,
+    no_std::*,
 };
 use fail::fail_point;
 use move_binary_format::{
@@ -30,7 +32,8 @@ use move_vm_types::{
 };
 
 use crate::native_extensions::NativeContextExtensions;
-use std::{cmp::min, collections::VecDeque, fmt::Write, sync::Arc};
+use alloc::{collections::VecDeque, fmt::Write, sync::Arc};
+use core::cmp::min;
 use tracing::error;
 
 macro_rules! debug_write {
@@ -399,7 +402,7 @@ impl Interpreter {
             Err(code) => {
                 gas_meter.charge_native_function(
                     result.cost,
-                    Option::<std::iter::Empty<&Value>>::None,
+                    Option::<core::iter::Empty<&Value>>::None,
                 )?;
                 return Err(PartialVMError::new(StatusCode::ABORTED).with_sub_status(code));
             }
@@ -947,7 +950,7 @@ impl CallStack {
     }
 
     /// Push a `Frame` on the call stack.
-    fn push(&mut self, frame: Frame) -> ::std::result::Result<(), Frame> {
+    fn push(&mut self, frame: Frame) -> ::core::result::Result<(), Frame> {
         if self.0.len() < CALL_STACK_SIZE_LIMIT {
             self.0.push(frame);
             Ok(())
@@ -1639,6 +1642,7 @@ impl Frame {
         let code = self.function.code();
         loop {
             for instruction in &code[self.pc as usize..] {
+                #[cfg(test)]
                 trace!(
                     &self.function,
                     &self.locals,

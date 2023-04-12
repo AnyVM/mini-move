@@ -21,12 +21,22 @@
 //! [servo/string-cache]: https://github.com/servo/string-cache
 //! [`Symbol`]: crate::Symbol
 
+#![no_std]
+#[macro_use]
+extern crate alloc;
+#[allow(unused_imports)]
+pub(crate) mod no_std {
+    pub use alloc::borrow::ToOwned;
+    pub use alloc::boxed::Box;
+    pub use alloc::string::String;
+    pub use alloc::string::ToString;
+    pub use alloc::vec::Vec;
+}
 mod pool;
 pub mod symbol;
 
-use once_cell::sync::Lazy;
+use spin::{Lazy, Mutex};
 use pool::Pool;
-use std::sync::Mutex;
 
 pub use symbol::Symbol;
 
@@ -36,7 +46,7 @@ pub(crate) static SYMBOL_POOL: Lazy<Mutex<Pool>> = Lazy::new(|| Mutex::new(Pool:
 #[cfg(test)]
 mod tests {
     use crate::{Pool, Symbol, SYMBOL_POOL};
-    use std::mem::replace;
+    use core::mem::replace;
 
     #[test]
     fn test_serialization() {

@@ -4,7 +4,7 @@
 use move_core_types::{
     account_address::AccountAddress, gas_algebra::AbstractMemorySize, language_storage::TypeTag,
 };
-use std::mem::size_of;
+use core::mem::size_of;
 
 /// Trait that provides an abstract view into a Move type.
 ///

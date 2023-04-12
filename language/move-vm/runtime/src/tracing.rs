@@ -9,7 +9,7 @@ use crate::debug::DebugContext;
 use ::{
     move_binary_format::file_format::Bytecode,
     move_vm_types::values::Locals,
-    once_cell::sync::Lazy,
+    spin::Lazy,
     std::{
         env,
         fs::{File, OpenOptions},

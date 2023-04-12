@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use crate::loader::Loader;
+use crate::	no_std::*;
 
 use move_binary_format::errors::*;
 use move_core_types::{
@@ -20,7 +21,7 @@ use move_vm_types::{
     loaded_data::runtime_types::Type,
     values::{GlobalValue, Value},
 };
-use std::collections::btree_map::BTreeMap;
+use alloc::collections::btree_map::BTreeMap;
 
 pub struct AccountDataCache {
     data_map: BTreeMap<Type, (MoveTypeLayout, GlobalValue)>,
